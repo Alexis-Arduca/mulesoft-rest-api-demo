@@ -1,0 +1,11 @@
+{
+  "main": "users-api-learning.yaml",
+  "name": "users-api-learning",
+  "classifier": "oas",
+  "organizationId": "",
+  "descriptorVersion": "1.0.0",
+  "tags": [],
+  "groupId": "",
+  "assetId": "users-api-learning",
+  "version": "1.0.0"
+}
