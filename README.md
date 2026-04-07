@@ -1,6 +1,8 @@
 # mulesoft-users-api
 
-> 🎓 Projet d'apprentissage — première prise en main de MuleSoft Anypoint, implémentation d'une API REST de gestion d'utilisateurs.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 🎓 Projet d'apprentissage - Première prise en main de MuleSoft Anypoint, implémentation d'une API REST de gestion d'utilisateurs.
 
 ---
 
@@ -29,10 +31,11 @@ Ce projet a été réalisé en autonomie afin de me former sur **MuleSoft** et l
 
 - Création d'un compte Anypoint Platform
 - Installation et configuration d'Anypoint Code Builder sur VS Code
-- Conception d'une spécification API REST en OAS 3.0 (YAML) avec 3 endpoints
+- Conception d'une spécification API REST en OAS 3.0 (YAML) avec 4 endpoints
 - Publication de la spec sur Anypoint Exchange
 - Génération du projet Mule d'implémentation à partir de la spec
-- Implémentation des flows Mule en XML (GET /users, GET /users/{id}, POST /users)
+- Implémentation des flows Mule en XML (GET /users, GET /users/{id}, POST /users, PATCH /users/{id})
+- Gestion des erreurs HTTP propre (400, 404, 405, 415, 501)
 - ⚠️ Exécution locale bloquée par un bug connu de Maven sur Windows (fichiers POM corrompus avec BOM UTF-8 incompatible lors du téléchargement des dépendances MuleSoft)
 
 ---
@@ -44,10 +47,13 @@ Ce projet a été réalisé en autonomie afin de me former sur **MuleSoft** et l
 | GET | `/api/users` | Retourne la liste de tous les utilisateurs |
 | GET | `/api/users/{id}` | Retourne un utilisateur par son ID (404 si non trouvé) |
 | POST | `/api/users` | Crée un nouvel utilisateur (201) |
+| PATCH | `/api/users/{id}` | Met à jour partiellement un utilisateur (404 si non trouvé) |
+
+> 💡 **Pourquoi PATCH et non PUT ?** PATCH est la bonne pratique REST pour une mise à jour partielle. Seuls les champs fournis sont modifiés, les autres restent inchangés. PUT remplacerait l'intégralité de la ressource. C'est ce dont l'on avait rapidement parlé durant notre entretien.
 
 ---
 
-## Exemple de réponses
+## Exemples de réponses
 
 **GET /api/users**
 ```json
@@ -65,6 +71,15 @@ Ce projet a été réalisé en autonomie afin de me former sur **MuleSoft** et l
 
 // Réponse 201
 { "id": "uuid-généré", "name": "Nouvel Utilisateur", "email": "nouveau@example.com", "message": "Utilisateur créé avec succès" }
+```
+
+**PATCH /api/users/1**
+```json
+// Body (seuls les champs à modifier)
+{ "email": "alice.nouveau@example.com" }
+
+// Réponse 200
+{ "id": "1", "name": "Alice Dupont", "email": "alice.nouveau@example.com", "message": "Utilisateur mis à jour avec succès" }
 ```
 
 ---
@@ -96,11 +111,26 @@ mulesoft-users-api/
 - Publication d'un asset sur **Anypoint Exchange**
 - Structure et logique des **flows Mule en XML**
 - Transformation de données avec **DataWeave 2.0**
+- Bonne pratique REST : **PATCH vs PUT** pour les mises à jour partielles
 - Gestion des erreurs HTTP (400, 404, 405, 415, 501) dans un contexte MuleSoft
+
+---
+
+## Prochaines étapes
+
+- [ ] Tests MUnit (tests unitaires MuleSoft)
+- [ ] Déploiement sur CloudHub
+- [ ] Connexion à une vraie base de données
+
+---
+
+## Licence
+
+Ce projet est sous licence **MIT** - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
 ---
 
 ## Auteur
 
-**Alexis Arduca** — Étudiant 5ème année Epitech Montpellier  
+**Alexis Arduca** - Étudiant 5ème année Epitech Montpellier  
 [alexis.arduca@epitech.eu](mailto:alexis.arduca@epitech.eu)

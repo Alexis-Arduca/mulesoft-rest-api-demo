@@ -205,5 +205,41 @@ output application/json
         </ee:transform>
         <logger level="INFO" message="POST /users appelé" />
     </flow>
-
+    <!-- PATCH /users/{id} : met à jour partiellement un utilisateur -->
+    <flow name="patch:\users\(id):application\json:users-api-learning-config">
+        <ee:transform doc:name="Transform Message">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+                    output application/json
+                    var userId = attributes.uriParams.'id'
+                    var users = [
+                        { id: "1", name: "Alice Dupont", email: "alice@example.com" },
+                        { id: "2", name: "Bob Martin", email: "bob@example.com" },
+                        { id: "3", name: "Charlie Durand", email: "charlie@example.com" }
+                    ]
+                    var found = users filter (u) -> u.id == userId
+                    var updated = if (isEmpty(found)) null else {
+                        id: userId,
+                        name: payload.name default found[0].name,
+                        email: payload.email default found[0].email,
+                        message: "Utilisateur mis à jour avec succès"
+                    }
+                    ---
+                    if (updated == null)
+                        { message: "Utilisateur non trouvé" }
+                    else
+                        updated]]></ee:set-payload>
+                                </ee:message>
+                                <ee:variables>
+                                    <ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+                    output application/java
+                    var userId = attributes.uriParams.'id'
+                    var users = [{ id: "1" }, { id: "2" }, { id: "3" }]
+                    var found = users filter (u) -> u.id == userId
+                    ---
+                    if (isEmpty(found)) 404 else 200]]></ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <logger level="INFO" message="#['PATCH /users/' ++ attributes.uriParams.'id' ++ ' appelé']" />
+    </flow>
 </mule>

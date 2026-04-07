@@ -46,6 +46,29 @@ paths:
                 $ref: "#/components/schemas/User"
         "404":
           description: User not found
+    patch:
+      summary: Partially update a user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "200":
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
 
 components:
   schemas:
